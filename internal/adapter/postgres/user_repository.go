@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS users (
     email_verified BOOLEAN NOT NULL DEFAULT FALSE,
     display_name TEXT,
     photo_url TEXT,
-    auth_provider TEXT NOT NULL CHECK (auth_provider IN ('password', 'google.com', 'apple.com')),
+    auth_provider TEXT NOT NULL CHECK (auth_provider IN ('password', 'google.com')),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
