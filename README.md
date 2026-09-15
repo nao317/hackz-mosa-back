@@ -21,6 +21,8 @@ Gitの管理対象外です。
 
 Apple側で必要なService ID、Team ID、Key ID、秘密鍵、Return URLの設定を含むフロントエンド連携は
 [docs/frontend-integration.md](docs/frontend-integration.md) を参照してください。
+Firebase、Go API、PostgreSQL間の責務と今後の拡張基準は
+[docs/auth-architecture.md](docs/auth-architecture.md) にまとめています。
 
 ## Start
 
@@ -66,7 +68,7 @@ Authorization: Bearer <Firebase ID token>
 | `DATABASE_URL` | Yes | PostgreSQL接続文字列 |
 | `FIREBASE_PROJECT_ID` | Yes | Firebase project ID |
 | `GOOGLE_APPLICATION_CREDENTIALS` | Yes | サービスアカウントJSONのパス |
-| `CORS_ALLOWED_ORIGINS` | No | 許可Originのカンマ区切り。既定値は `http://localhost:3000` |
+| `CORS_ALLOWED_ORIGINS` | No | 許可Originのカンマ区切り。開発時は `localhost:5173` と `localhost:3000` |
 | `PORT` | No | HTTPポート。既定値は `8080` |
 
 `FIREBASE_AUTH_EMULATOR_HOST` を設定するとFirebase Auth Emulatorも利用できます。

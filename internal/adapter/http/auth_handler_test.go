@@ -35,6 +35,9 @@ func TestAuthenticate(t *testing.T) {
 	if service.token != "firebase-id-token" {
 		t.Fatalf("token = %q", service.token)
 	}
+	if got := recorder.Header().Get("Cache-Control"); got != "no-store" {
+		t.Fatalf("Cache-Control = %q, want no-store", got)
+	}
 }
 
 func TestAuthenticateRequiresBearerToken(t *testing.T) {

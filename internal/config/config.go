@@ -15,10 +15,13 @@ type Config struct {
 
 func Load() (Config, error) {
 	config := Config{
-		Port:               envOrDefault("PORT", "8080"),
-		DatabaseURL:        os.Getenv("DATABASE_URL"),
-		FirebaseProjectID:  os.Getenv("FIREBASE_PROJECT_ID"),
-		CORSAllowedOrigins: csvEnvOrDefault("CORS_ALLOWED_ORIGINS", "http://localhost:3000"),
+		Port:              envOrDefault("PORT", "8080"),
+		DatabaseURL:       os.Getenv("DATABASE_URL"),
+		FirebaseProjectID: os.Getenv("FIREBASE_PROJECT_ID"),
+		CORSAllowedOrigins: csvEnvOrDefault(
+			"CORS_ALLOWED_ORIGINS",
+			"http://localhost:5173,http://localhost:3000",
+		),
 	}
 
 	if config.DatabaseURL == "" {

@@ -29,6 +29,9 @@ func (h *AuthHandler) Register(group *echo.Group) {
 }
 
 func (h *AuthHandler) authenticate(c *echo.Context) error {
+	c.Response().Header().Set("Cache-Control", "no-store")
+	c.Response().Header().Set("Pragma", "no-cache")
+
 	idToken, ok := bearerToken(c.Request().Header.Get("Authorization"))
 	if !ok {
 		return errorResponse(c, stdhttp.StatusUnauthorized, "unauthorized", "valid Firebase ID token is required")
