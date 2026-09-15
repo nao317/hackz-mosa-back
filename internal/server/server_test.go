@@ -7,7 +7,7 @@ import (
 )
 
 func TestHealth(t *testing.T) {
-	app := New()
+	app := New(Dependencies{AllowedOrigins: []string{"http://localhost:3000"}})
 	request := httptest.NewRequest(http.MethodGet, "/health", nil)
 	recorder := httptest.NewRecorder()
 
