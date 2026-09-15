@@ -1,6 +1,6 @@
 # フロントエンド認証連携
 
-Email/Password、Google、Appleの認証画面とOAuthフローはFirebase Client SDKで処理します。
+Email/PasswordとGoogleの認証画面とOAuthフローはFirebase Client SDKで処理します。
 ログイン後にFirebase ID tokenを取得し、バックエンドへBearer tokenとして送信してください。
 
 ## Firebase Console
@@ -9,10 +9,6 @@ AuthenticationのSign-in methodで次のプロバイダーを有効化します�
 
 - Email/Password
 - Google
-- Apple
-
-AppleはApple DeveloperでService ID、Team ID、Key ID、秘密鍵を作成し、Return URLに
-`https://<FIREBASE_PROJECT_ID>.firebaseapp.com/__/auth/handler`を登録する必要があります。
 
 ## Web SDK
 
@@ -22,7 +18,6 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   GoogleAuthProvider,
-  OAuthProvider,
   signInWithEmailAndPassword,
   signInWithPopup,
   type User,
@@ -49,14 +44,6 @@ export async function signInWithEmail(email: string, password: string) {
 
 export async function signInWithGoogle() {
   const credential = await signInWithPopup(auth, new GoogleAuthProvider());
-  return connectToBackend(credential.user);
-}
-
-export async function signInWithApple() {
-  const provider = new OAuthProvider("apple.com");
-  provider.addScope("email");
-  provider.addScope("name");
-  const credential = await signInWithPopup(auth, provider);
   return connectToBackend(credential.user);
 }
 

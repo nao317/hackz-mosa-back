@@ -2,7 +2,7 @@
 
 Go、Echo v5、Firebase Authentication、PostgreSQLで動くAPIサーバーです。
 
-FirebaseがEmail/Password、Google、Appleの認証フローを担当し、このAPIはFirebase ID tokenを
+FirebaseがEmail/PasswordとGoogleの認証フローを担当し、このAPIはFirebase ID tokenを
 検証してアプリケーションユーザーをPostgreSQLへ同期します。パスワードやOAuth credentialは
 バックエンドに保存しません。
 
@@ -15,12 +15,11 @@ FirebaseがEmail/Password、Google、Appleの認証フローを担当し、こ�
 
 ## Firebase setup
 
-Firebase ConsoleのAuthenticationでEmail/Password、Google、Appleを有効化してください。
+Firebase ConsoleのAuthenticationでEmail/PasswordとGoogleを有効化してください。
 サービスアカウントJSONは `secrets/firebase-service-account.json` に配置します。このディレクトリは
 Gitの管理対象外です。
 
-Apple側で必要なService ID、Team ID、Key ID、秘密鍵、Return URLの設定を含むフロントエンド連携は
-[docs/frontend-integration.md](docs/frontend-integration.md) を参照してください。
+フロントエンド連携は[docs/frontend-integration.md](docs/frontend-integration.md)を参照してください。
 Firebase、Go API、PostgreSQL間の責務と今後の拡張基準は
 [docs/auth-architecture.md](docs/auth-architecture.md) にまとめています。
 
@@ -42,6 +41,24 @@ set +a
 make run
 ```
 
+## Deploy to Render
+
+`render.yaml` はSingaporeリージョンにDocker Web ServiceとRender Postgresを作成します。
+Render DashboardでこのリポジトリをBlueprintとして接続してください。
+
+Web Serviceの「Environment」からSecret Fileを次の名前で追加し、ローカルの
+`secrets/firebase-service-account.json` の内容を登録します。
+
+```text
+firebase-service-account.json
+```
+
+実行時には `/etc/secrets/firebase-service-account.json` として読み込まれます。秘密鍵は
+環境変数、`render.yaml`、Dockerイメージ、Gitリポジトリへ含めないでください。
+
+デプロイ完了後、フロントエンドの `VITE_API_BASE_URL` をRender Web Serviceの公開URLへ変更し、
+Firebase Authenticationの承認済みドメインへフロントエンドの本番ドメインを追加します。
+
 ## API
 
 ### `POST /api/v1/auth/login`
@@ -54,8 +71,8 @@ Authorization: Bearer <Firebase ID token>
 
 ### `GET /api/v1/me`
 
-同じBearer tokenを検証し、現在のユーザーを返します。どちらのエンドポイントもEmail、Google、Apple
-以外のFirebase providerは拒否します。
+同じBearer tokenを検証し、現在のユーザーを返します。どちらのエンドポイントもEmailとGoogle以外の
+Firebase providerは拒否します。
 
 ### `GET /health`
 
