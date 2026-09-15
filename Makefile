@@ -1,4 +1,4 @@
-.PHONY: run build test fmt fmt-check vet check
+.PHONY: run build test fmt fmt-check vet check db-up db-down
 
 run:
 	go run ./cmd/api
@@ -20,3 +20,9 @@ vet:
 	go vet ./...
 
 check: fmt-check vet test build
+
+db-up:
+	docker compose up -d postgres
+
+db-down:
+	docker compose down
