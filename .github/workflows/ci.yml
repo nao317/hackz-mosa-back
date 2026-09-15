@@ -10,14 +10,14 @@ permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref_name }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   quality:
     name: Go quality
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     env:
       TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/hackz_mosa_test?sslmode=disable
 
@@ -63,7 +63,7 @@ jobs:
         run: make vet
 
       - name: Run tests
-        run: go test -race -shuffle=on -covermode=atomic -coverprofile=coverage.out ./...
+        run: go test -timeout=5m -race -shuffle=on -covermode=atomic -coverprofile=coverage.out ./...
 
       - name: Build
         run: make build
