@@ -18,8 +18,10 @@ RUN CGO_ENABLED=0 GOOS=linux go build \
 FROM alpine:3.23 AS runtime
 
 RUN apk add --no-cache ca-certificates tzdata \
+    && addgroup -S -g 1000 render-secrets \
     && addgroup -S app \
-    && adduser -S app -G app
+    && adduser -S app -G app \
+    && addgroup app render-secrets
 USER app
 
 COPY --from=builder --chown=app:app /out/api /usr/local/bin/api

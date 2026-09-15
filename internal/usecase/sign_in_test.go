@@ -32,7 +32,6 @@ func TestSignInSupportsConfiguredProviders(t *testing.T) {
 	providers := []domain.AuthProvider{
 		domain.ProviderEmail,
 		domain.ProviderGoogle,
-		domain.ProviderApple,
 	}
 
 	for _, provider := range providers {
@@ -72,7 +71,7 @@ func TestSignInRejectsUnsupportedProvider(t *testing.T) {
 	repository := &userRepositoryStub{}
 	service := NewSignIn(verifierStub{identity: domain.Identity{
 		FirebaseUID: "firebase-user",
-		Provider:    "github.com",
+		Provider:    "apple.com",
 	}}, repository)
 
 	_, err := service.Execute(context.Background(), "valid-token")

@@ -8,7 +8,7 @@ Go APIは独自アクセストークンやCookieセッションを発行せず�
 
 ```text
 Browser
-  -> Firebase Authentication (Email / Google / Apple)
+  -> Firebase Authentication (Email / Google)
   <- Firebase ID token
   -> Go API (Authorization: Bearer <ID token>)
        -> Firebase Admin SDK (署名・期限・失効・無効化を検証)
@@ -19,12 +19,12 @@ Browser
 
 | レイヤー | 責務 |
 | --- | --- |
-| フロントエンド | 認証UI、Email/Password入力、Google/Apple OAuth、ID token更新、Firebase sign-out |
+| フロントエンド | 認証UI、Email/Password入力、Google OAuth、ID token更新、Firebase sign-out |
 | Firebase Authentication | credential検証、アカウント連携、ID token発行、パスワードリセット |
 | Go API | ID token検証、許可provider判定、API認可、アプリユーザー同期 |
 | PostgreSQL | アプリ内ユーザーID、プロフィール、利用中provider、将来追加するアプリ固有データ |
 
-パスワード、Google/Appleのaccess token、Firebase ID token、サービスアカウントJSONはPostgreSQLへ
+パスワード、Googleのaccess token、Firebase ID token、サービスアカウントJSONはPostgreSQLへ
 保存しない。サービスアカウントJSONは実行環境からApplication Default Credentialsとして注入する。
 
 ## API契約
@@ -56,7 +56,7 @@ Bearer tokenから現在のアプリ内ユーザーを返す。将来の認証�
 - 本番通信はHTTPSのみとする。
 - 許可Originは本番フロントエンドの完全なOriginに限定し、ワイルドカードを使わない。
 - Firebase Admin SDKで失効済みtokenと無効ユーザーも検査する。
-- Email、Google、Apple以外の `sign_in_provider` はGo APIで拒否する。
+- EmailとGoogle以外の `sign_in_provider` はGo APIで拒否する。
 - 認証エラーの内部詳細やFirebase SDKのエラー本文はクライアントへ返さない。
 - Firebase UID以外のクライアント申告ユーザーIDは認可判断に利用しない。
 

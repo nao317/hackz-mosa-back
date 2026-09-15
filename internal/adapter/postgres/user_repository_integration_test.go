@@ -43,7 +43,7 @@ func TestUserRepositoryUpsert(t *testing.T) {
 	}
 
 	identity.Email = "updated@example.com"
-	identity.Provider = domain.ProviderApple
+	identity.Provider = domain.ProviderEmail
 	updated, err := repository.Upsert(ctx, identity)
 	if err != nil {
 		t.Fatalf("second Upsert() error = %v", err)
@@ -55,7 +55,7 @@ func TestUserRepositoryUpsert(t *testing.T) {
 	if updated.Email == nil || *updated.Email != identity.Email {
 		t.Fatalf("updated email = %v, want %q", updated.Email, identity.Email)
 	}
-	if updated.Provider != domain.ProviderApple {
-		t.Fatalf("updated provider = %q, want %q", updated.Provider, domain.ProviderApple)
+	if updated.Provider != domain.ProviderEmail {
+		t.Fatalf("updated provider = %q, want %q", updated.Provider, domain.ProviderEmail)
 	}
 }

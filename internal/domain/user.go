@@ -16,12 +16,11 @@ type AuthProvider string
 const (
 	ProviderEmail  AuthProvider = "password"
 	ProviderGoogle AuthProvider = "google.com"
-	ProviderApple  AuthProvider = "apple.com"
 )
 
 func (p AuthProvider) Supported() bool {
 	switch p {
-	case ProviderEmail, ProviderGoogle, ProviderApple:
+	case ProviderEmail, ProviderGoogle:
 		return true
 	default:
 		return false
