@@ -20,6 +20,7 @@ Firebase ConsoleのAuthenticationでEmail/PasswordとGoogleを有効化してく
 Gitの管理対象外です。
 
 フロントエンド連携は[docs/frontend-integration.md](docs/frontend-integration.md)を参照してください。
+プレイリスト画面とのAPI連携は[docs/playlist-api.md](docs/playlist-api.md)を参照してください。
 Firebase、Go API、PostgreSQL間の責務と今後の拡張基準は
 [docs/auth-architecture.md](docs/auth-architecture.md) にまとめています。
 
@@ -73,6 +74,12 @@ Authorization: Bearer <Firebase ID token>
 
 同じBearer tokenを検証し、現在のユーザーを返します。どちらのエンドポイントもEmailとGoogle以外の
 Firebase providerは拒否します。
+
+### `/api/v1/playlists`
+
+認証ユーザーのプレイリスト作成・取得・削除、Audius曲の追加・並べ替え・削除を提供します。
+1プレイリストにつき最大30曲です。すべての操作でBearer tokenが必要です。エンドポイントと
+リクエスト形式は[プレイリストAPI連携](docs/playlist-api.md)を参照してください。
 
 ### `GET /health`
 
