@@ -16,7 +16,7 @@ type signInStub struct {
 
 func (s *signInStub) Execute(_ context.Context, token string) (domain.User, error) {
 	s.token = token
-	return domain.User{FirebaseUID: "firebase-user", Provider: domain.ProviderGoogle}, nil
+	return domain.User{ID: 42, FirebaseUID: "firebase-user", Provider: domain.ProviderGoogle}, nil
 }
 
 func TestAuthenticate(t *testing.T) {

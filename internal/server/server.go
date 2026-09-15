@@ -13,8 +13,9 @@ type response struct {
 }
 
 type Dependencies struct {
-	AuthHandler    *httpadapter.AuthHandler
-	AllowedOrigins []string
+	AuthHandler     *httpadapter.AuthHandler
+	PlaylistHandler *httpadapter.PlaylistHandler
+	AllowedOrigins  []string
 }
 
 // New builds the HTTP server and registers its middleware and routes.
@@ -24,7 +25,7 @@ func New(dependencies Dependencies) *echo.Echo {
 	app.Use(middleware.Recover())
 	app.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: dependencies.AllowedOrigins,
-		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodOptions},
+		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete, http.MethodOptions},
 		AllowHeaders: []string{"Accept", "Authorization", "Content-Type"},
 		MaxAge:       3600,
 	}))
@@ -37,6 +38,9 @@ func New(dependencies Dependencies) *echo.Echo {
 	})
 	if dependencies.AuthHandler != nil {
 		dependencies.AuthHandler.Register(app.Group("/api/v1"))
+	}
+	if dependencies.PlaylistHandler != nil {
+		dependencies.PlaylistHandler.Register(app.Group("/api/v1"))
 	}
 
 	return app
