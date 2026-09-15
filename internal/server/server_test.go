@@ -3,6 +3,7 @@ package server
 import (
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
@@ -32,5 +33,23 @@ func TestCORSAllowsFrontendDevelopmentOrigin(t *testing.T) {
 
 	if got := recorder.Header().Get("Access-Control-Allow-Origin"); got != "http://localhost:5173" {
 		t.Fatalf("Access-Control-Allow-Origin = %q", got)
+	}
+}
+
+func TestCORSAllowsPlaylistMutationMethods(t *testing.T) {
+	app := New(Dependencies{AllowedOrigins: []string{"http://localhost:5173"}})
+	for _, method := range []string{http.MethodPut, http.MethodDelete} {
+		t.Run(method, func(t *testing.T) {
+			request := httptest.NewRequest(http.MethodOptions, "/api/v1/playlists/1", nil)
+			request.Header.Set("Origin", "http://localhost:5173")
+			request.Header.Set("Access-Control-Request-Method", method)
+			recorder := httptest.NewRecorder()
+
+			app.ServeHTTP(recorder, request)
+
+			if got := recorder.Header().Get("Access-Control-Allow-Methods"); !strings.Contains(got, method) {
+				t.Fatalf("Access-Control-Allow-Methods = %q, want it to contain %q", got, method)
+			}
+		})
 	}
 }

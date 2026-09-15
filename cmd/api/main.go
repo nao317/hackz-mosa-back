@@ -47,6 +47,10 @@ func run(ctx context.Context) error {
 	if err := users.Migrate(ctx); err != nil {
 		return err
 	}
+	playlists := postgresadapter.NewPlaylistRepository(users)
+	if err := playlists.Migrate(ctx); err != nil {
+		return err
+	}
 
 	verifier, err := firebaseadapter.NewTokenVerifier(ctx, cfg.FirebaseProjectID)
 	if err != nil {
@@ -54,9 +58,12 @@ func run(ctx context.Context) error {
 	}
 	signIn := usecase.NewSignIn(verifier, users)
 	authHandler := httpadapter.NewAuthHandler(signIn)
+	playlistService := usecase.NewPlaylistService(playlists)
+	playlistHandler := httpadapter.NewPlaylistHandler(signIn, playlistService)
 	app := server.New(server.Dependencies{
-		AuthHandler:    authHandler,
-		AllowedOrigins: cfg.CORSAllowedOrigins,
+		AuthHandler:     authHandler,
+		PlaylistHandler: playlistHandler,
+		AllowedOrigins:  cfg.CORSAllowedOrigins,
 	})
 	address := ":" + cfg.Port
 
