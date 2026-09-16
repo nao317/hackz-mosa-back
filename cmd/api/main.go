@@ -51,6 +51,10 @@ func run(ctx context.Context) error {
 	if err := playlists.Migrate(ctx); err != nil {
 		return err
 	}
+	mapMappings := postgresadapter.NewMapMappingRepository(users)
+	if err := mapMappings.Migrate(ctx); err != nil {
+		return err
+	}
 
 	verifier, err := firebaseadapter.NewTokenVerifier(ctx, cfg.FirebaseProjectID)
 	if err != nil {
@@ -60,10 +64,13 @@ func run(ctx context.Context) error {
 	authHandler := httpadapter.NewAuthHandler(signIn)
 	playlistService := usecase.NewPlaylistService(playlists)
 	playlistHandler := httpadapter.NewPlaylistHandler(signIn, playlistService)
+	mapMappingService := usecase.NewMapMappingService(mapMappings)
+	mapMappingHandler := httpadapter.NewMapMappingHandler(signIn, mapMappingService)
 	app := server.New(server.Dependencies{
-		AuthHandler:     authHandler,
-		PlaylistHandler: playlistHandler,
-		AllowedOrigins:  cfg.CORSAllowedOrigins,
+		AuthHandler:       authHandler,
+		PlaylistHandler:   playlistHandler,
+		MapMappingHandler: mapMappingHandler,
+		AllowedOrigins:    cfg.CORSAllowedOrigins,
 	})
 	address := ":" + cfg.Port
 
