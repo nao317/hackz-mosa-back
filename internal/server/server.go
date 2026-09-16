@@ -13,9 +13,10 @@ type response struct {
 }
 
 type Dependencies struct {
-	AuthHandler     *httpadapter.AuthHandler
-	PlaylistHandler *httpadapter.PlaylistHandler
-	AllowedOrigins  []string
+	AuthHandler       *httpadapter.AuthHandler
+	PlaylistHandler   *httpadapter.PlaylistHandler
+	MapMappingHandler *httpadapter.MapMappingHandler
+	AllowedOrigins    []string
 }
 
 // New builds the HTTP server and registers its middleware and routes.
@@ -41,6 +42,9 @@ func New(dependencies Dependencies) *echo.Echo {
 	}
 	if dependencies.PlaylistHandler != nil {
 		dependencies.PlaylistHandler.Register(app.Group("/api/v1"))
+	}
+	if dependencies.MapMappingHandler != nil {
+		dependencies.MapMappingHandler.Register(app.Group("/api/v1"))
 	}
 
 	return app

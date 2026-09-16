@@ -21,6 +21,7 @@ Gitの管理対象外です。
 
 フロントエンド連携は[docs/frontend-integration.md](docs/frontend-integration.md)を参照してください。
 プレイリスト画面とのAPI連携は[docs/playlist-api.md](docs/playlist-api.md)を参照してください。
+地図への楽曲登録は[docs/map-mapping-api.md](docs/map-mapping-api.md)を参照してください。
 Firebase、Go API、PostgreSQL間の責務と今後の拡張基準は
 [docs/auth-architecture.md](docs/auth-architecture.md) にまとめています。
 
@@ -80,6 +81,11 @@ Firebase providerは拒否します。
 認証ユーザーのプレイリスト作成・取得・削除、Audius曲の追加・並べ替え・削除を提供します。
 1プレイリストにつき最大30曲です。すべての操作でBearer tokenが必要です。エンドポイントと
 リクエスト形式は[プレイリストAPI連携](docs/playlist-api.md)を参照してください。
+
+### `/api/v1/map-mappings`
+
+認証ユーザーごとに、地図上のポリゴン範囲とAudius曲を登録・取得・削除します。
+リクエスト形式は[マッピングAPI連携](docs/map-mapping-api.md)を参照してください。
 
 ### `GET /health`
 
